@@ -34,7 +34,7 @@ class GameController extends Controller
     public function store(Request $request)
     {
         $game = new Game();
-        $game->id_rawg = $request->id_rawg;
+        $game->id_rawg = empty($request->id_rawg) ? null : $request->id_rawg; //puo salvare un null
         $game->slug = $request->slug;
         $game->name = $request->name;
         $game->released = $request->released;
@@ -56,7 +56,8 @@ class GameController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $game = Game::with(['genres', 'platforms'])->find($id);
+        return view('games.show', compact('game'));
     }
 
     /**
@@ -64,7 +65,11 @@ class GameController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $game = Game::find($id);
+        $genres = Genre::all();
+        $platforms = Platform::all();
+
+        return view('games.edit', compact('game', 'genres', 'platforms'));
     }
 
     /**
@@ -72,7 +77,22 @@ class GameController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $game = Game::find($id);
+        $game->id_rawg = empty($request->id_rawg) ? null : $request->id_rawg;
+        $game->slug = $request->slug;
+        $game->name = $request->name;
+        $game->released = $request->released;
+        $game->background_image = $request->background_image;
+        $game->rating = $request->rating;
+        $game->playtime = $request->playtime;
+        $game->description = $request->description;
+        $game->esrb_rating = $request->esrb_rating;
+        $game->save();
+
+        $game->genres()->sync($request->genres);
+        $game->platforms()->sync($request->platforms);
+
+        return redirect()->route('games.index')->with('success', 'Game updated successfully.');
     }
 
     /**
@@ -80,6 +100,11 @@ class GameController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $game = Game::find($id);
+        $game->genres()->detach();
+        $game->platforms()->detach();
+        $game->delete();
+
+        return redirect()->route('games.index')->with('success', 'Game deleted successfully.');
     }
 }
