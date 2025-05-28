@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/games/search', [GameController::class, 'search'])->name('games.search');
     Route::resource('games', GameController::class);
 });
 

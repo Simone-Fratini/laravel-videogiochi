@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('games.create')" :active="request()->routeIs('games.create')">
                         {{ __('Add New Game') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('games.search')" :active="request()->routeIs('games.search')">
+                        {{ __('Search Game') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -81,6 +84,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('games.create')" :active="request()->routeIs('games.create')">
                 {{ __('Add New Game') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('games.search')" :active="request()->routeIs('games.search')">
+                {{ __('Search Game') }}
             </x-responsive-nav-link>
         </div>
 

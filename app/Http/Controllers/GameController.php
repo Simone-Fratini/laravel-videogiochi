@@ -107,4 +107,17 @@ class GameController extends Controller
 
         return redirect()->route('games.index')->with('success', 'Game deleted successfully.');
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        if ($search) {
+            $games = Game::where('name', 'like', "%{$search}%")->get();
+        } else {
+            $games = Game::all();
+        }
+
+        return view('games.search', compact('games', 'search'));
+    }
 }
