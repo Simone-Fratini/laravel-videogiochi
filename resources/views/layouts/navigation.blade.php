@@ -15,7 +15,7 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('games.index')" :active="request()->routeIs('games.*')">
+                    <x-nav-link :href="route('games.index')" :active="request()->routeIs('games')">
                         {{ __('Game List') }}
                     </x-nav-link>
                     <x-nav-link :href="route('games.create')" :active="request()->routeIs('games.create')">
