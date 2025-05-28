@@ -1,6 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-    </x-slot>
 
     <div class="py-8 px-6 bg-custom-gray">
         <div class="max-w-7xl mx-auto">
