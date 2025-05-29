@@ -15,4 +15,9 @@ class Game extends Model
     {
         return $this->belongsToMany(Platform::class);
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

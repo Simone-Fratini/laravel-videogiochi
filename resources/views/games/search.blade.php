@@ -1,38 +1,97 @@
 <x-app-layout>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <!-- Search Form -->
-                    <form action="{{ route('games.search') }}" method="GET" class="mb-6">
-                        <div class="flex gap-4">
-                            <input type="text" 
-                                   name="search" 
-                                   value="{{ $search }}" 
-                                   placeholder="Search games..." 
-                                   class="flex-1 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
-                            <button type="submit" 
-                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                Search
-                            </button>
-                        </div>
-                    </form>
+    <div class="py-8 px-6 bg-custom-gray">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-white mb-4">Search Games</h2>
+                <!-- Search Form -->
+                <form action="{{ route('games.search') }}" method="GET" class="mb-6">
+                    <div class="flex gap-4">
+                        <input type="text" 
+                               name="search" 
+                               value="{{ $search }}" 
+                               placeholder="Search games..." 
+                               class="flex-1 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        <button type="submit" 
+                                class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            🔍 Search
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-                    <!-- Results -->
-                    @if($games->count() > 0)
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Genres</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Platforms</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach($games as $game)
-                                <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
-                                    <h3 class="text-lg font-semibold">{{ $game->name }}</h3>
-                                    <p class="text-sm text-gray-600 dark:text-gray-300">
-                                        {{ $game->description }}
-                                    </p>
-                                </div>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $game->name }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-wrap gap-2">
+                                            @foreach ($game->genres as $genre)
+                                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                                    {{ $genre->name }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-wrap gap-2">
+                                            @foreach ($game->platforms as $platform)
+                                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                                    {{ $platform->name }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <div class="flex items-center gap-3">
+                                            <a href="{{ route('games.show', $game->slug) }}" 
+                                               class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition duration-150">
+                                                👁️ Show
+                                            </a>
+                                            <a href="{{ route('games.edit', $game->slug) }}" 
+                                               class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 transition duration-150">
+                                                ✏️ Edit
+                                            </a>
+                                            <form action="{{ route('games.destroy', $game->slug) }}" 
+                                                  method="POST" 
+                                                  class="inline-block" 
+                                                  onsubmit="return confirm('Are you sure you want to delete this game?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" 
+                                                        class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition duration-150">
+                                                    🗑️ Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
                             @endforeach
-                        </div>
-                    @else
-                        <p class="text-gray-600 dark:text-gray-400">No games found.</p>
-                    @endif
+
+                            @if ($games->isEmpty())
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                        No games found.
+                                    </td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+                    {{ $games->links() }}
                 </div>
             </div>
         </div>

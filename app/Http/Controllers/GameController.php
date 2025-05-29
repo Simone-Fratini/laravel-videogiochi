@@ -54,9 +54,11 @@ class GameController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        $game = Game::with(['genres', 'platforms'])->find($id);
+        $game = Game::with(['genres', 'platforms'])
+            ->where('slug', $slug)
+            ->firstOrFail();
         return view('games.show', compact('game'));
     }
 
@@ -113,9 +115,12 @@ class GameController extends Controller
         $search = $request->input('search');
 
         if ($search) {
-            $games = Game::where('name', 'like', "%{$search}%")->get();
+            $games = Game::with(['genres', 'platforms'])
+                ->where('name', 'like', "%{$search}%")
+                ->paginate(30);
         } else {
-            $games = Game::all();
+            $games = Game::with(['genres', 'platforms'])
+                ->paginate(30);
         }
 
         return view('games.search', compact('games', 'search'));

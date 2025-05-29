@@ -47,15 +47,15 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex items-center gap-3">
-                                            <a href="{{ route('games.show', $game->id) }}" 
+                                            <a href="{{ route('games.show', $game->slug) }}" 
                                                class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition duration-150">
                                                 👁️ Show
                                             </a>
-                                            <a href="{{ route('games.edit', $game->id) }}" 
+                                            <a href="{{ route('games.edit', $game->slug) }}" 
                                                class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 transition duration-150">
                                                 ✏️ Edit
                                             </a>
-                                            <form action="{{ route('games.destroy', $game->id) }}" 
+                                            <form action="{{ route('games.destroy', $game->slug) }}" 
                                                   method="POST" 
                                                   class="inline-block" 
                                                   onsubmit="return confirm('Are you sure you want to delete this game?')">
