@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use App\Models\Genre;
 use App\Models\Platform;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GameController extends Controller
 {
@@ -25,7 +27,8 @@ class GameController extends Controller
     {
         $genres = Genre::all();
         $platforms = Platform::all();
-        return view('games.create', compact('genres', 'platforms'));
+        $tags = Tag::all();
+        return view('games.create', compact('genres', 'platforms', 'tags'));
     }
 
     /**
@@ -33,9 +36,20 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
+        $baseSlug = Str::slug($request->name);
+        $slug = $baseSlug;
+        $counter = 1;
+
         $game = new Game();
         $game->id_rawg = empty($request->id_rawg) ? null : $request->id_rawg; //can save a null
-        $game->slug = $request->slug;
+
+        //logic to have a unique slug
+        while (Game::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        $game->slug = $slug;
         $game->name = $request->name;
         $game->released = $request->released;
         $game->background_image = $request->background_image;
@@ -65,22 +79,22 @@ class GameController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $slug)
     {
-        $game = Game::find($id);
+        $game = Game::where('slug', $slug)->firstOrFail();
         $genres = Genre::all();
+        $tags = Tag::all();
         $platforms = Platform::all();
 
-        return view('games.edit', compact('game', 'genres', 'platforms'));
+        return view('games.edit', compact('game', 'genres', 'platforms', 'tags'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $slug)
     {
-        $game = Game::find($id);
-        $game->id_rawg = empty($request->id_rawg) ? null : $request->id_rawg;
+        $game = Game::where('slug', $slug)->firstOrFail();
         $game->slug = $request->slug;
         $game->name = $request->name;
         $game->released = $request->released;
@@ -93,6 +107,7 @@ class GameController extends Controller
 
         $game->genres()->sync($request->genres);
         $game->platforms()->sync($request->platforms);
+        $game->tags()->sync($request->tags);
 
         return redirect()->route('games.index')->with('success', 'Game updated successfully.');
     }
