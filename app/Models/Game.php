@@ -16,6 +16,11 @@ class Game extends Model
         return $this->belongsToMany(Platform::class);
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
     public function getRouteKeyName()
     {
         return 'slug';

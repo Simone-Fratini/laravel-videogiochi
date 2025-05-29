@@ -15,7 +15,7 @@
                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
                         ✏️ Edit Game
                     </a>
-                    <form action="{{ route('games.destroy', $game->id) }}" 
+                    <form action="{{ route('games.destroy', $game->slug) }}" 
                           method="POST" 
                           class="inline-block" 
                           onsubmit="return confirm('Are you sure you want to delete this game?')">
@@ -30,7 +30,7 @@
             </div>
 
             <!-- Game Details Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl overflow-hidden">
                 <div class="p-6">
                     <!-- Game Image and Basic Info -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -70,8 +70,8 @@
                         </div>
                     </div>
 
-                    <!-- Genres and Platforms -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <!-- Genres Platforms and tags-->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <!-- Genres -->
                         <div>
                             <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Genres</h3>
@@ -99,7 +99,22 @@
                                 @endforelse
                             </div>
                         </div>
+                        
+                        <!-- Tags -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Tags</h3>
+                            <div class="flex flex-wrap gap-2">
+                                @forelse($game->tags as $tag)
+                                    <span class="px-3 py-1 text-sm font-semibold rounded-full bg-red-500 text-green-800 dark:bg-red-500 dark:text-green-200">
+                                        {{ $tag->name }}
+                                    </span>
+                                @empty
+                                    <p class="text-gray-500 dark:text-gray-400">No tags specified</p>
+                                @endforelse
+                            </div>
+                        </div>
                     </div>
+
 
                     <!-- Description -->
                     <div class="mt-6">

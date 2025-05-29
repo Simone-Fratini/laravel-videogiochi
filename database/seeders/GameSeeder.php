@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Game;
 use App\Models\Genre;
 use App\Models\Platform;
+use App\Models\Tag;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 
@@ -15,7 +16,7 @@ class GameSeeder extends Seeder
      */
     public function run()
     {
-        for ($page = 1; $page <= 7; $page++) {
+        for ($page = 1; $page <= 150; $page++) {
             $response = Http::get('https://api.rawg.io/api/games', [
                 'key' => env('RAWG_API_KEY'),
                 'ordering' => '-rating',
@@ -62,6 +63,22 @@ class GameSeeder extends Seeder
                             $genre = $existing;
                         }
                         $game->genres()->attach($genre->id);
+                    }
+                }
+
+                if (isset($g['tags'])) {
+                    foreach ($g['tags'] as $gTagData) {
+                        $existing = Tag::where('rawg_id', $gTagData['id'])->first();
+                        if (!$existing) {
+                            $tag = new Tag();
+                            $tag->rawg_id = $gTagData['id'];
+                            $tag->name = $gTagData['name'];
+                            $tag->slug = $gTagData['slug'];
+                            $tag->save();
+                        } else {
+                            $tag = $existing;
+                        }
+                        $game->tags()->attach($tag->id);
                     }
                 }
 
