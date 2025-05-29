@@ -2,16 +2,16 @@
     <div class="py-8 px-6 bg-custom-gray">
         <div class="max-w-7xl mx-auto">
             <!-- Header with back button -->
-            <div class="mb-6 flex justify-between items-center">
+            <a href="{{ route('games.index') }}" 
+               class="text-white hover:text-gray-300 transition duration-150">
+                ← Back to Games
+            </a>
+            <div class="mb-6 flex justify-between items-center mt-6">
                 <div class="flex items-center gap-4">
-                    <a href="{{ route('games.index') }}" 
-                       class="text-white hover:text-gray-300 transition duration-150">
-                        ← Back to Games
-                    </a>
                     <h2 class="text-2xl font-bold text-white">{{ $game->name }}</h2>
                 </div>
                 <div class="flex gap-3">
-                    <a href="{{ route('games.edit', $game->id) }}" 
+                    <a href="{{ route('games.edit', $game->slug) }}" 
                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
                         ✏️ Edit Game
                     </a>
