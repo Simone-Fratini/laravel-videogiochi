@@ -141,4 +141,40 @@ class GameController extends Controller
 
         return view('games.search', compact('games', 'search'));
     }
+
+    public function dashboard()
+    {
+        // Get total counts
+        $totalGames = Game::count();
+        $totalGenres = Genre::count();
+        $totalPlatforms = Platform::count();
+        $totalTags = Tag::count();
+
+        // Get top rated games
+        $topRatedGames = Game::orderBy('rating', 'desc')->take(5)->get();
+
+        // Get most common genres
+        $popularGenres = Genre::withCount('games')->orderBy('games_count', 'desc')->take(5)->get();
+
+        // Get most common platforms
+        $popularPlatforms = Platform::withCount('games')->orderBy('games_count', 'desc')->take(5)->get();
+
+        // Get recently added games
+        $recentGames = Game::latest()->take(5)->get();
+
+        // Get average rating
+        $averageRating = Game::avg('rating');
+
+        return view('dashboard', compact(
+            'totalGames',
+            'totalGenres',
+            'totalPlatforms',
+            'totalTags',
+            'topRatedGames',
+            'popularGenres',
+            'popularPlatforms',
+            'recentGames',
+            'averageRating'
+        ));
+    }
 }
