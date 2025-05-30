@@ -6,6 +6,7 @@ use App\Models\Game;
 use App\Models\Genre;
 use App\Models\Platform;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -41,9 +42,8 @@ class GameController extends Controller
         $counter = 1;
 
         $game = new Game();
-        $game->id_rawg = empty($request->id_rawg) ? null : $request->id_rawg; //can save a null
+        $game->id_rawg = empty($request->id_rawg) ? null : $request->id_rawg;
 
-        //logic to have a unique slug
         while (Game::where('slug', $slug)->exists()) {
             $slug = $baseSlug . '-' . $counter;
             $counter++;
@@ -52,7 +52,13 @@ class GameController extends Controller
         $game->slug = $slug;
         $game->name = $request->name;
         $game->released = $request->released;
-        $game->background_image = $request->background_image;
+
+        // Upload immage
+        if ($request->hasFile('background_image')) {
+            $path = Storage::putFile('uploads', $request->file('background_image'));
+            $game->background_image = $path;
+        }
+
         $game->rating = $request->rating;
         $game->playtime = $request->playtime;
         $game->description = $request->description;
@@ -98,7 +104,18 @@ class GameController extends Controller
         $game->slug = $request->slug;
         $game->name = $request->name;
         $game->released = $request->released;
-        $game->background_image = $request->background_image;
+
+        // Handle image upload
+        if ($request->hasFile('background_image')) {
+            // Delete old image if exists
+            if ($game->background_image) {
+                Storage::delete($game->background_image);
+            }
+            // Store new image
+            $path = Storage::putFile('uploads', $request->file('background_image'));
+            $game->background_image = $path;
+        }
+
         $game->rating = $request->rating;
         $game->playtime = $request->playtime;
         $game->description = $request->description;
@@ -151,7 +168,7 @@ class GameController extends Controller
         $totalTags = Tag::count();
 
         // Get top rated games
-        $topRatedGames = Game::orderBy('rating', 'desc')->take(5)->get();
+        $topRatedGames = Game::orderBy('rating', 'desc')->orderBy('playtime', 'desc')->take(5)->get();
 
         // Get most common genres
         $popularGenres = Genre::withCount('games')->orderBy('games_count', 'desc')->take(5)->get();

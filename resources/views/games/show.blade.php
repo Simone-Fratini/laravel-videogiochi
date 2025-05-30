@@ -37,7 +37,7 @@
                         <!-- Game Image -->
                         <div class="md:col-span-1">
                             @if($game->background_image)
-                                <img src="{{ $game->background_image }}" 
+                                <img src="{{ Str::startsWith($game->background_image, 'http') ? $game->background_image : asset('storage/' . $game->background_image) }}" 
                                      alt="{{ $game->name }}" 
                                      class="w-full h-64 object-cover rounded-lg shadow-md">
                             @else

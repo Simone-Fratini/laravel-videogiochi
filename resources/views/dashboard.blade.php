@@ -81,7 +81,13 @@
                             @foreach($topRatedGames as $game)
                                 <div class="flex items-center space-x-4">
                                     @if($game->background_image)
-                                        <img src="{{ $game->background_image }}" alt="{{ $game->name }}" class="w-16 h-16 object-cover rounded">
+                                        <img src="{{ Str::startsWith($game->background_image, 'http') ? $game->background_image : asset('storage/' . $game->background_image) }}" 
+                                             alt="{{ $game->name }}" 
+                                             class="w-16 h-16 object-cover rounded">
+                                    @else
+                                        <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                            <span class="text-gray-400 dark:text-gray-500 text-xs">No image</span>
+                                        </div>
                                     @endif
                                     <div class="flex-1">
                                         <h4 class="font-medium text-gray-400">{{ $game->name }}</h4>
@@ -134,7 +140,13 @@
                             @foreach($recentGames as $game)
                                 <div class="flex items-center space-x-4">
                                     @if($game->background_image)
-                                        <img src="{{ $game->background_image }}" alt="{{ $game->name }}" class="w-16 h-16 object-cover rounded">
+                                        <img src="{{ Str::startsWith($game->background_image, 'http') ? $game->background_image : asset('storage/' . $game->background_image) }}" 
+                                             alt="{{ $game->name }}" 
+                                             class="w-16 h-16 object-cover rounded">
+                                    @else
+                                        <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                            <span class="text-gray-400 dark:text-gray-500 text-xs">No image</span>
+                                        </div>
                                     @endif
                                     <div class="flex-1">
                                         <h4 class="font-medium text-gray-500 dark:text-gray-400">{{ $game->name }}</h4>
