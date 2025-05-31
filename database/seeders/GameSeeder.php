@@ -16,7 +16,7 @@ class GameSeeder extends Seeder
      */
     public function run()
     {
-        for ($page = 1; $page <= 150; $page++) {
+        for ($page = 1; $page <= 200; $page++) {
             $response = Http::get('https://api.rawg.io/api/games', [
                 'key' => env('RAWG_API_KEY'),
                 'ordering' => '-rating',
@@ -45,10 +45,13 @@ class GameSeeder extends Seeder
                 $game->released = $g['released'] ?? null;
                 $game->background_image = $g['background_image'] ?? null;
                 $game->rating = $g['rating'] ?? null;
+                $game->metacritic = $g['metacritic'] ?? null;
                 $game->playtime = $g['playtime'] ?? null;
-                $game->description = $details['description_raw'] ?? null;
+                $game->description = $details['description'] ?? null;
+                $game->description_raw = $details['description_raw'] ?? null;
                 $game->esrb_rating = $details['esrb_rating']['name'] ?? null;
                 $game->save();
+
                 // Aggiungi generi
                 if (isset($g['genres'])) {
                     foreach ($g['genres'] as $gData) {

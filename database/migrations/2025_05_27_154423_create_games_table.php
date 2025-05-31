@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('background_image')->nullable();
             $table->float('rating')->nullable();
             $table->integer('playtime')->nullable();
-            $table->text('description')->nullable();
+            $table->longText('description')->nullable();
             $table->string('esrb_rating')->nullable();
             $table->timestamps();
         });

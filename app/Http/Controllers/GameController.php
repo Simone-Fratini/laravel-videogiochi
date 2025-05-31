@@ -61,8 +61,9 @@ class GameController extends Controller
 
         $game->rating = $request->rating;
         $game->playtime = $request->playtime;
-        $game->description = $request->description;
+        $game->description_raw = $request->description_raw;
         $game->esrb_rating = $request->esrb_rating;
+        $game->metacritic = $request->metacritic;
         $game->save();
 
         $game->genres()->sync($request->genres);
@@ -118,8 +119,9 @@ class GameController extends Controller
 
         $game->rating = $request->rating;
         $game->playtime = $request->playtime;
-        $game->description = $request->description;
+        $game->description_raw = $request->description_raw;
         $game->esrb_rating = $request->esrb_rating;
+        $game->metacritic = $request->metacritic;
         $game->save();
 
         $game->genres()->sync($request->genres);
@@ -168,7 +170,7 @@ class GameController extends Controller
         $totalTags = Tag::count();
 
         // Get top rated games
-        $topRatedGames = Game::orderBy('rating', 'desc')->orderBy('playtime', 'desc')->take(5)->get();
+        $topRatedGames = Game::orderBy('rating', 'desc')->orderBy('playtime', 'desc')->orderBy('metacritic', 'desc')->take(5)->get();
 
         // Get most common genres
         $popularGenres = Genre::withCount('games')->orderBy('games_count', 'desc')->take(5)->get();

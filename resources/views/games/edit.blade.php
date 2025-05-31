@@ -97,13 +97,23 @@
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <!-- Metacritic score -->
+                            <div>
+                                <label for="metacritic" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Metacritic Score</label>
+                                <input type="number" name="metacritic" id="metacritic" value="{{ old('metacritic', $game->metacritic) }}" 
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600">
+                                @error('metacritic')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
+                            
 
                         <!-- Description -->
                         <div>
                             <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
                             <textarea name="description" id="description" rows="6" 
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600">{{ old('description', $game->description) }}</textarea>
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600">{{ old('description', $game->description_raw) }}</textarea>
                             @error('description')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror

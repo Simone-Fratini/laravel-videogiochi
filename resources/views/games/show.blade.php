@@ -121,7 +121,7 @@
                         <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Description</h3>
                         <div class="prose dark:prose-invert max-w-none">
                             <p class="text-gray-600 dark:text-gray-400">
-                                {{ $game->description ?? 'No description available.' }}
+                                {{ $game->description_raw ?? 'No description available.' }}
                             </p>
                         </div>
                     </div>
