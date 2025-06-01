@@ -13,7 +13,7 @@ class GameApiController extends Controller
     // Return paginated list of games with relations
     public function index()
     {
-        $games = Game::with(['genres', 'platforms', 'tags'])->orderBy('rating', 'asc')->orderBy('playtime', 'asc')->paginate(10);
+        $games = Game::with(['genres', 'platforms', 'tags'])->orderBy('rating', 'asc')->orderBy('released', 'desc')->paginate(10);
 
         return response()->json($games);
     }
@@ -26,6 +26,13 @@ class GameApiController extends Controller
         if (!$game) {
             return response()->json(['error' => 'Game not found'], 404);
         }
+
+        return response()->json($game);
+    }
+
+    public function topRated()
+    {
+        $game = Game::with(['genres', 'platforms', 'tags'])->orderBy('metacritic', 'asc')->orderBy('released', 'desc')->orderBy('rating', 'desc')->get();
 
         return response()->json($game);
     }

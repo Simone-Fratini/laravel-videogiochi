@@ -10,5 +10,6 @@ Route::get('/games/{game}', [GameApiController::class, 'show']);
 
 // Additional endpoints
 Route::get('/genres', [GameApiController::class, 'genres']);
+Route::get('/topRated', [GameApiController::class, 'topRated']);
 Route::get('/platforms', [GameApiController::class, 'platforms']);
 Route::get('/tags', [GameApiController::class, 'tags']);
