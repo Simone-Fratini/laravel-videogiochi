@@ -21,20 +21,20 @@ class GameApiController extends Controller
     // Return a single game by ID
     public function show(Game $game)
     {
-        $game = Game::with(['genres', 'platforms', 'tags'])->find($game);
-
-        if (!$game) {
-            return response()->json(['error' => 'Game not found'], 404);
-        }
-
+        $game->load(['genres', 'platforms', 'tags']);
         return response()->json($game);
     }
 
     public function topRated()
     {
-        $game = Game::with(['genres', 'platforms', 'tags'])->orderBy('metacritic', 'asc')->orderBy('released', 'desc')->orderBy('rating', 'desc')->get();
+        $games = Game::with(['genres', 'platforms', 'tags'])
+            ->orderBy('metacritic', 'desc')
+            ->orderBy('released', 'desc')
+            ->orderBy('rating', 'desc')
+            ->take(6)
+            ->get();
 
-        return response()->json($game);
+        return response()->json($games);
     }
 
     // Get all genres
