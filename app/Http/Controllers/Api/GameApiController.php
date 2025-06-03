@@ -7,15 +7,53 @@ use App\Models\Game;
 use App\Models\Genre;
 use App\Models\Platform;
 use App\Models\Tag;
+use Illuminate\Http\Request;
 
 class GameApiController extends Controller
 {
-    // Return paginated list of games with relations
-    public function index()
+    // Return paginated list of games
+    public function index(Request $request)
     {
-        $games = Game::with(['genres', 'platforms', 'tags'])->orderBy('rating', 'asc')->orderBy('released', 'desc')->paginate(10);
+        $query = Game::with(['genres', 'platforms', 'tags']);
 
-        return response()->json($games);
+        // Add search filter 
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        // Add genre filter
+        if ($request->has('genre') && $request->input('genre') != 'All Genres') {
+            $genreId = $request->input('genre');
+            $query->whereHas('genres', function ($q) use ($genreId) {
+                $q->where('genres.id', $genreId);
+            });
+        }
+
+        // Add platform filter
+        if ($request->has('platform') && $request->input('platform') != 'All Platforms') {
+            $platformId = $request->input('platform');
+            $query->whereHas('platforms', function ($q) use ($platformId) {
+                $q->where('platforms.id', $platformId);
+            });
+        }
+
+        if ($request->has('newreleases')) {
+            $query->orderBy('released', 'desc');
+        }
+
+        $games = $query->orderBy('rating', 'asc')
+            ->orderBy('released', 'desc')
+            ->paginate(30);
+
+        $genres = Genre::all();
+        $platforms = Platform::all();
+
+        return response()->json([
+            'games' => $games,
+            'tags' => $genres,
+            'platforms' => $platforms
+        ]);
     }
 
     // Return a single game by ID
