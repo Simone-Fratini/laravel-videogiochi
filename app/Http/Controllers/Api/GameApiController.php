@@ -42,6 +42,10 @@ class GameApiController extends Controller
             $query->orderBy('released', 'desc');
         }
 
+        if ($request->has('topRated')) {
+            $query->orderBy('released', 'desc');
+        }
+
         $games = $query->orderBy('rating', 'asc')
             ->orderBy('released', 'desc')
             ->paginate(30);
@@ -63,11 +67,18 @@ class GameApiController extends Controller
         return response()->json($game);
     }
 
-    public function topRated()
+    public function topRated(Request $request)
     {
-        $games = Game::with(['genres', 'platforms', 'tags'])
-            ->orderBy('metacritic', 'desc')
-            ->orderBy('released', 'desc')
+        $query = Game::with(['genres', 'platforms', 'tags']);
+
+        if ($request->has('platform') && $request->input('platform') != 'All') {
+            $platformName = $request->input('platform');
+            $query->whereHas('platforms', function ($q) use ($platformName) {
+                $q->where('platforms.name', $platformName);
+            });
+        }
+
+        $games = $query->orderBy('metacritic', 'desc')
             ->orderBy('rating', 'desc')
             ->take(6)
             ->get();
